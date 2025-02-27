@@ -21,7 +21,7 @@ struct CitiesConstants {
         }
 
         static let favorites = "favorites"
-        static let searchCity = "Search City"
+        static let searchCities = "Search Cities"
         static let tryAgain = "Try Again"
         static let coordinatesTitle = "coordinates:"
         static let coordinatesValue = "latitude: %f, longitude: %f"

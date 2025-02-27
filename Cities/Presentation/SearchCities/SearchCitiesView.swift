@@ -32,7 +32,7 @@ struct SearchCitiesView: View {
 
     var body: some View {
         contentView
-            .navigationBarTitle(CitiesConstants.Strings.searchCity,
+            .navigationBarTitle(CitiesConstants.Strings.searchCities,
                                 displayMode: .inline)
             .padding(.top, Dimens.spacing10)
             .padding(.horizontal, Dimens.spacing10)

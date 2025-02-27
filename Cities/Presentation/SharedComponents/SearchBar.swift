@@ -12,7 +12,7 @@ struct SearchBar: View {
     @Binding var text: String
 
     var body: some View {
-        TextField(CitiesConstants.Strings.searchCity, text: $text)
+        TextField(CitiesConstants.Strings.searchCities, text: $text)
             .padding(CitiesConstants.Dimens.spacing10)
             .background(Color(UIColor.systemGray6))
             .cornerRadius(CitiesConstants.Dimens.spacing10)
