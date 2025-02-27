@@ -1,0 +1,42 @@
+name: iOS CI Pipeline
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: config environment
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: List available Xcode versions
+      run: ls /Applications | grep Xcode
+    - name: Set up Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_16.1.0.app/Contents/Developer
+    - name: Show current version of Xcode
+      run: xcodebuild -version
+
+  test:
+    name: run unit tests and ui tests
+    runs-on: macos-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_16.1.0.app/Contents/Developer
+    - name: Show current version of Xcode
+      run: xcodebuild -version
+    - name: Run Unit and UI Tests
+      run: ./run_tests.sh
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: ronaldfabra/Cities
