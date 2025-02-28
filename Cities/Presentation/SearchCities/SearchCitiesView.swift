@@ -31,31 +31,9 @@ struct SearchCitiesView: View {
     }
 
     var body: some View {
-        contentView
-            .navigationBarTitle(CitiesConstants.Strings.searchCities,
-                                displayMode: .inline)
-            .padding(.top, Dimens.spacing10)
-            .padding(.horizontal, Dimens.spacing10)
-            .onAppear {
-                locationManager.requestLocationPermission()
-            }
-            .onChange(of: viewModel.error) { _, error in
-                switch error {
-                case .none:
-                    toastManager.hideToast()
-                default:
-                    toastManager.showToast(message: error.errorDescription,
-                                           type: .error,
-                                           fixed: true) {
-                        viewModel.tryAgain()
-                    }
-                }
-            }
-            .onRotate { newOrientation in
-                orientation = newOrientation
-            }
-            .if(!isLandScape) { view in
-                NavigationStack {
+        NavigationStack {
+            contentView
+                .if(!isLandScape) { view in
                     view.navigationDestination(for: CityDomainModel.self) { city in
                         let position = CLLocationCoordinate2D(
                             latitude: city.latitude,
@@ -69,7 +47,30 @@ struct SearchCitiesView: View {
                         .accessibilityIdentifier("cityMapView")
                     }
                 }
+        }
+        .accessibilityIdentifier("searchCitiesView")
+        .navigationBarTitle(CitiesConstants.Strings.searchCities,
+                            displayMode: .inline)
+        .padding(.top, Dimens.spacing10)
+        .padding(.horizontal, Dimens.spacing10)
+        .onAppear {
+            locationManager.requestLocationPermission()
+        }
+        .onChange(of: viewModel.error) { _, error in
+            switch error {
+            case .none:
+                toastManager.hideToast()
+            default:
+                toastManager.showToast(message: error.errorDescription,
+                                       type: .error,
+                                       fixed: true) {
+                    viewModel.tryAgain()
+                }
             }
+        }
+        .onRotate { newOrientation in
+            orientation = newOrientation
+        }
     }
 }
 // MARK: contentView
@@ -94,6 +95,7 @@ extension SearchCitiesView {
                 defaultCoordinate: locationManager.cityCoordinates,
                 coordinate: $selectedCityCoordinate
             )
+            .accessibilityIdentifier("cityMapView")
         }
     }
 }
@@ -114,6 +116,7 @@ extension SearchCitiesView {
                     FavoriteFilterButton(isActive: viewModel.showFavorites) {
                         viewModel.showFavorites.toggle()
                     }
+                    .accessibilityIdentifier("searchCitiesViewShowOnlyFavoritesButton")
                     Divider()
                     if viewModel.filteredCities.isEmpty {
                         emptyView
@@ -144,6 +147,7 @@ extension SearchCitiesView {
                                 viewModel.updateFavorite(city: city)
                             }
                         )
+                        .accessibilityIdentifier("cityRow_\(city.id)")
                         if city != viewModel.filteredCities.last {
                             Divider()
                         }
@@ -191,6 +195,6 @@ extension SearchCitiesView {
 }
 
 #Preview {
-    SearchCitiesView(dependencyContainer: DIContainer.shared)
+    SearchCitiesView(dependencyContainer: MockDIContainer())
         .environmentObject(ToastManager())
 }

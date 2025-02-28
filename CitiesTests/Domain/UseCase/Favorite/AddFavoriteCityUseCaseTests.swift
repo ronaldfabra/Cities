@@ -20,7 +20,7 @@ final class AddFavoriteCityUseCaseTests {
             latitude: 11.2303485,
             longitude: -74.2008869
         )
-        let favoriteRepository = FavoriteRepositoryMock()
+        let favoriteRepository = MockFavoriteRepository()
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
         do {
             // When
@@ -42,7 +42,7 @@ final class AddFavoriteCityUseCaseTests {
             latitude: 11.2303485,
             longitude: -74.2008869
         )
-        let favoriteRepository = FavoriteRepositoryMock()
+        let favoriteRepository = MockFavoriteRepository()
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
         do {
             // When

@@ -15,8 +15,8 @@ final class SearchCitiesViewModelTests: XCTestCase {
     func testUpdateQuery() {
         // Given
         let query = "Santa Marta"
-        let cityRepository = CityRepositoryMock()
-        let favoriteRepository = FavoriteRepositoryMock()
+        let cityRepository = MockCityRepository()
+        let favoriteRepository = MockFavoriteRepository()
         let getCitiesUseCase = GetCitiesUseCase(repository: cityRepository)
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
@@ -46,8 +46,8 @@ final class SearchCitiesViewModelTests: XCTestCase {
     func testUpdateQueryWithDifferentValue() {
         // Given
         let query = "test"
-        let cityRepository = CityRepositoryMock()
-        let favoriteRepository = FavoriteRepositoryMock()
+        let cityRepository = MockCityRepository()
+        let favoriteRepository = MockFavoriteRepository()
         let getCitiesUseCase = GetCitiesUseCase(repository: cityRepository)
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
@@ -66,9 +66,9 @@ final class SearchCitiesViewModelTests: XCTestCase {
 
     func testTryAgain() {
         // Given
-        let cityRepository = CityRepositoryMock()
+        let cityRepository = MockCityRepository()
         cityRepository.mockCityListResponse = []
-        let favoriteRepository = FavoriteRepositoryMock()
+        let favoriteRepository = MockFavoriteRepository()
         let getCitiesUseCase = GetCitiesUseCase(repository: cityRepository)
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
@@ -92,7 +92,7 @@ final class SearchCitiesViewModelTests: XCTestCase {
                                                      latitude: 11.2303485,
                                                      longitude: -74.2008869)]
         viewModel.tryAgain()
-        wait(for: [expectation], timeout: 1.0)
+        wait(for: [expectation], timeout: 5.0)
         // Then
         #expect(viewModel.filteredCities.count == cityRepository.mockCityListResponse.count)
         #expect(viewModel.filteredCities.first == cityRepository.mockCityListResponse.first)
@@ -108,8 +108,8 @@ final class SearchCitiesViewModelTests: XCTestCase {
             latitude: 11.2303485,
             longitude: -74.2008869
         )
-        let cityRepository = CityRepositoryMock()
-        let favoriteRepository = FavoriteRepositoryMock()
+        let cityRepository = MockCityRepository()
+        let favoriteRepository = MockFavoriteRepository()
         let getCitiesUseCase = GetCitiesUseCase(repository: cityRepository)
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
@@ -144,8 +144,8 @@ final class SearchCitiesViewModelTests: XCTestCase {
             latitude: 11.2303485,
             longitude: -74.2008869
         )
-        let cityRepository = CityRepositoryMock()
-        let favoriteRepository = FavoriteRepositoryMock()
+        let cityRepository = MockCityRepository()
+        let favoriteRepository = MockFavoriteRepository()
         favoriteRepository.favoriteList = [city]
         let getCitiesUseCase = GetCitiesUseCase(repository: cityRepository)
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)

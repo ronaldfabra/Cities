@@ -20,10 +20,4 @@ struct CityDto: Identifiable, Hashable, DTOProtocol {
     func toDomain() -> CityDomainModel {
         CityMapper().adapt(apiResponse: self)
     }
-
-    static func == (lhs: CityDto, rhs: CityDto) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.country == rhs.country &&
-        lhs.name == rhs.name
-    }
 }

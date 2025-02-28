@@ -13,7 +13,7 @@ import XCTest
 final class GetFavoritesCitiesUseCaseTests {
     @Test func getAllFavoritesCities() async throws {
         // Given
-        let favoriteRepository = FavoriteRepositoryMock()
+        let favoriteRepository = MockFavoriteRepository()
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)
         do {
             // When

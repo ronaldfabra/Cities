@@ -1,15 +1,22 @@
 //
-//  SearchCitiesViewModelBuilder.swift
+//  MockDIContainer.swift
 //  Cities
 //
-//  Created by Ronal Fabra Jimenez on 27/02/25.
+//  Created by Ronal Fabra Jimenez on 28/02/25.
 //
 
 
-struct SearchCitiesViewModelBuilder {
-    static func make(network: NetworkProtocol, database: CitiesModelContainer) -> SearchCitiesViewModel {
-        let cityRepository = CityRepository(network: network)
-        let favoriteRepository = FavoriteRepository(database: database)
+class MockDIContainer: DIContainerProtocol {
+    let withError: Bool
+
+    init(withError: Bool = false) {
+        self.withError = withError
+    }
+
+    func getSearchCitiesViewModel() -> SearchCitiesViewModel {
+        let cityRepository = MockCityRepository()
+        cityRepository.mockCityListResponse = withError ? [] : cityRepository.mockCityListResponse
+        let favoriteRepository = FavoriteRepository(database: CitiesModelContainer(storeInMemoryOnly: true))
         let getCitiesUseCase = GetCitiesUseCase(repository: cityRepository)
         let getFavoritesCitiesUseCase = GetFavoritesCitiesUseCase(repository: favoriteRepository)
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)

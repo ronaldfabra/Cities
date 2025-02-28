@@ -20,7 +20,7 @@ final class DeleteFavoriteCityUseCaseTests {
             latitude: 11.2303485,
             longitude: -74.2008869
         )
-        let favoriteRepository = FavoriteRepositoryMock()
+        let favoriteRepository = MockFavoriteRepository()
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
         let deleteFavoriteCityUseCase = DeleteFavoriteCityUseCase(repository: favoriteRepository)
         do {
@@ -46,7 +46,7 @@ final class DeleteFavoriteCityUseCaseTests {
             latitude: 11.2303485,
             longitude: -74.2008869
         )
-        let favoriteRepository = FavoriteRepositoryMock()
+        let favoriteRepository = MockFavoriteRepository()
         let addFavoriteCityUseCase = AddFavoriteCityUseCase(repository: favoriteRepository)
         let deleteFavoriteCityUseCase = DeleteFavoriteCityUseCase(repository: favoriteRepository)
         do {

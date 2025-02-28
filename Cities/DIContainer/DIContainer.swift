@@ -7,9 +7,8 @@
 
 
 class DIContainer: DIContainerProtocol {
-    static var shared: DIContainerProtocol = DIContainer()
-
     func getSearchCitiesViewModel() -> SearchCitiesViewModel {
-        SearchCitiesViewModelBuilder.make()
+        SearchCitiesViewModelBuilder.make(network: Network.shared,
+                                          database: CitiesModelContainer())
     }
 }

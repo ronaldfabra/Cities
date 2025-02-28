@@ -56,4 +56,9 @@ struct CitiesConstants {
         static let value14 = 14.0
         static let value20 = 20.0
     }
+
+    struct LaunchArgument {
+        static let responseError = "RESPONSE_ERROR"
+        static let uiTests = "UI_TEST"
+    }
 }

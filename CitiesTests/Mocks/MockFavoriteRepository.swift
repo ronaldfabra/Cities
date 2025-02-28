@@ -1,15 +1,14 @@
 //
-//  FavoriteRepositoryMock.swift
+//  MockFavoriteRepository.swift
 //  Cities
 //
-//  Created by Ronal Fabra Jimenez on 27/02/25.
+//  Created by Ronal Fabra Jimenez on 28/02/25.
 //
 
 
 @testable import Cities
-import Foundation
 
-class FavoriteRepositoryMock: FavoriteRepositoryProtocol {
+class MockFavoriteRepository: FavoriteRepositoryProtocol {
 
     var favoriteList: [CityDomainModel] = []
 

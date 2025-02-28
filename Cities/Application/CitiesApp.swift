@@ -14,10 +14,20 @@ struct CitiesApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                SearchCitiesView(dependencyContainer: DIContainer.shared)
+                SearchCitiesView(dependencyContainer: getDIContainer())
                 ToastView()
+                    .accessibilityIdentifier("toastView")
             }
             .environmentObject(toastManager)
+        }
+    }
+
+    private func getDIContainer() -> DIContainerProtocol {
+        if ProcessInfo.processInfo.arguments.contains(CitiesConstants.LaunchArgument.uiTests) {
+            let responseError = ProcessInfo.processInfo.arguments.contains(CitiesConstants.LaunchArgument.responseError)
+            return MockDIContainer(withError: responseError)
+        } else {
+            return DIContainer()
         }
     }
 }
