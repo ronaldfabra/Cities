@@ -10,18 +10,21 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-    var defaultCoordinate: CLLocationCoordinate2D
     @Binding var coordinate: CLLocationCoordinate2D
 
+    @State private var orientation: UIDeviceOrientation = UIDevice.current.orientation
+    @Environment(\.presentationMode) var presentationMode
     @State private var cameraPosition: MapCameraPosition
 
-    init(defaultCoordinate: CLLocationCoordinate2D,
-         coordinate: Binding<CLLocationCoordinate2D>) {
-        self.defaultCoordinate = defaultCoordinate
+    private var isLandscape: Bool {
+        orientation.isLandscape || orientation == .portraitUpsideDown
+    }
+    
+    init(coordinate: Binding<CLLocationCoordinate2D>) {
         self._coordinate = coordinate
         cameraPosition = .region(
             MKCoordinateRegion(
-                center: defaultCoordinate,
+                center: coordinate.wrappedValue,
                 span: MKCoordinateSpan(
                     latitudeDelta: 0.1,
                     longitudeDelta: 0.1
@@ -35,11 +38,14 @@ struct MapView: View {
             .mapControls {
                 MapUserLocationButton()
             }
-            .onChange(of: defaultCoordinate) { _, newCoordinate in
-                updateCameraPosition(coordinate: newCoordinate)
-            }
             .onChange(of: coordinate) { _, newCoordinate in
                 updateCameraPosition(coordinate: newCoordinate)
+            }
+            .onRotate { newOrientation in
+                orientation = newOrientation
+                if isLandscape {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
             }
     }
 
@@ -56,19 +62,13 @@ struct MapView: View {
 }
 
 #Preview {
-    @Previewable @State var defaultCoordinate: CLLocationCoordinate2D = .init(
-        latitude: .zero,
-        longitude: .zero
-    )
-
     @Previewable @State var coordinate: CLLocationCoordinate2D = .init(
         latitude: .zero,
         longitude: .zero
     )
 
     VStack {
-        MapView(defaultCoordinate: defaultCoordinate,
-                coordinate: $coordinate)
+        MapView(coordinate: $coordinate)
         Button {
             coordinate = .init(
                 latitude: 11.2303485,

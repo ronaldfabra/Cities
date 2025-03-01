@@ -20,7 +20,7 @@ struct SearchCitiesView: View {
     @EnvironmentObject private var toastManager: ToastManager
     @State private var selectedCityCoordinate: CLLocationCoordinate2D = .init()
 
-    private var isLandScape: Bool {
+    private var isLandscape: Bool {
         orientation.isLandscape || orientation == .portraitUpsideDown
     }
 
@@ -33,26 +33,24 @@ struct SearchCitiesView: View {
     var body: some View {
         NavigationStack {
             contentView
-                .if(!isLandScape) { view in
+                .navigationBarTitle(CitiesConstants.Strings.searchCities,
+                                    displayMode: .inline)
+                .navigationBar(.green.opacity(0.7))
+                .if(!isLandscape) { view in
                     view.navigationDestination(for: CityDomainModel.self) { city in
-                        let position = CLLocationCoordinate2D(
+                        selectedCityCoordinate = .init(
                             latitude: city.latitude,
                             longitude: city.longitude
                         )
-                        return MapView(
-                            defaultCoordinate: position,
-                            coordinate: .constant(position)
-                        )
-                        .navigationBarTitle(city.name, displayMode: .inline)
-                        .accessibilityIdentifier("cityMapView")
+                        return MapView(coordinate: $selectedCityCoordinate)
+                            .navigationBarTitle(city.name, displayMode: .inline)
+                            .navigationBar(.green.opacity(0.7))
+                            .accessibilityIdentifier("cityMapView")
                     }
                 }
+                .padding(Dimens.spacing10)
         }
         .accessibilityIdentifier("searchCitiesView")
-        .navigationBarTitle(CitiesConstants.Strings.searchCities,
-                            displayMode: .inline)
-        .padding(.top, Dimens.spacing10)
-        .padding(.horizontal, Dimens.spacing10)
         .onAppear {
             locationManager.requestLocationPermission()
         }
@@ -73,11 +71,12 @@ struct SearchCitiesView: View {
         }
     }
 }
+
 // MARK: contentView
 extension SearchCitiesView {
     private var contentView: some View {
         VStack {
-            if isLandScape {
+            if isLandscape {
                 landScapeView
             } else {
                 searchComponent
@@ -91,11 +90,8 @@ extension SearchCitiesView {
     private var landScapeView: some View {
         HStack(spacing: CitiesConstants.Dimens.spacing20) {
             searchComponent
-            MapView(
-                defaultCoordinate: locationManager.cityCoordinates,
-                coordinate: $selectedCityCoordinate
-            )
-            .accessibilityIdentifier("cityMapView")
+            MapView(coordinate: $selectedCityCoordinate)
+                .accessibilityIdentifier("cityMapView")
         }
     }
 }
@@ -136,7 +132,7 @@ extension SearchCitiesView {
                         CityRow(
                             city: city,
                             isFavorite: viewModel.isFavorite(cityId: city.id),
-                            isLandScape: isLandScape,
+                            isLandscape: isLandscape,
                             onItemTap: {
                                 selectedCityCoordinate = .init(
                                     latitude: city.latitude,

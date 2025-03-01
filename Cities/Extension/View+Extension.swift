@@ -21,4 +21,9 @@ public extension View {
     func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
         self.modifier(DeviceRotationViewModifier(action: action))
     }
+
+    func navigationBar(_ background: Color = .yellow) -> some View {
+        return self
+            .modifier(ColoredNavigationBar(background: background))
+    }
 }

@@ -144,6 +144,7 @@ class SearchCitiesViewModel: ObservableObject {
     }
 }
 
+// MARK: view functions
 extension SearchCitiesViewModel {
     func updateQuery(query: String) {
         querySubject.send(query)

@@ -12,26 +12,26 @@ struct CityRow: View {
 
     var city: CityDomainModel
     var isFavorite: Bool
-    var isLandScape: Bool
+    var isLandscape: Bool
     var onItemTap: (() -> Void)?
     var onFavoriteButtonTap: (() -> Void)?
 
     init(
         city: CityDomainModel,
         isFavorite: Bool,
-        isLandScape: Bool,
+        isLandscape: Bool,
         onItemTap: (() -> Void)? = nil,
         onFavoriteButtonTap: (() -> Void)? = nil
     ) {
         self.city = city
         self.isFavorite = isFavorite
-        self.isLandScape = isLandScape
+        self.isLandscape = isLandscape
         self.onItemTap = onItemTap
         self.onFavoriteButtonTap = onFavoriteButtonTap
     }
 
     var body: some View {
-        if isLandScape {
+        if isLandscape {
             landScapeRow(city)
         } else {
             portraitRow(city)
@@ -51,8 +51,10 @@ struct CityRow: View {
                 )
             }
             .padding(CitiesConstants.Dimens.spacing5)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(alignment: .leading)
+            .contentShape(.rect)
         }
+        .contentShape(.rect)
         .buttonStyle(PlainButtonStyle())
     }
 
@@ -67,8 +69,10 @@ struct CityRow: View {
                 )
             }
             .padding(CitiesConstants.Dimens.spacing5)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(alignment: .leading)
+            .contentShape(.rect)
         }
+        .contentShape(.rect)
         .buttonStyle(PlainButtonStyle())
     }
 
@@ -97,7 +101,7 @@ struct CityRow: View {
     CityRow(
         city: .init(id: 1, country: "CO", name: "Santa Marta", latitude: 11.2303485, longitude: -74.2008869),
         isFavorite: false,
-        isLandScape: true
+        isLandscape: true
     )
     .border(Color.red, width: 1.0)
     .padding()
