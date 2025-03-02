@@ -19,6 +19,7 @@ struct SearchCitiesView: View {
     @StateObject private var viewModel: SearchCitiesViewModel
     @StateObject private var locationManager = LocationManager()
     @EnvironmentObject private var toastManager: ToastManager
+    @State var isDetailOpen: Bool = false
 
     private var isLandscape: Bool {
         orientation.isLandscape || orientation == .portraitUpsideDown
@@ -39,13 +40,20 @@ struct SearchCitiesView: View {
                 .navigationDestination(for: CitiesRoute.self) { route in
                     switch route {
                     case .map(let city):
-                        MapView(coordinate: $viewModel.selectedCityCoordinate)
-                            .navigationBarTitle(city.fullName, displayMode: .inline)
-                            .navigationBar(CitiesConstants.CitiesColors.green)
-                            .accessibilityIdentifier("cityMapView")
+                        MapView(currentLocation: $locationManager.currentLocation,
+                                coordinate: $viewModel.selectedCityCoordinate)
+                        .navigationBarTitle(city.fullName, displayMode: .inline)
+                        .navigationBar(CitiesConstants.CitiesColors.green)
+                        .accessibilityIdentifier("cityMapView")
                     case .detail(let city):
                         CityDetailView(city: city)
                             .accessibilityIdentifier("cityDetailView")
+                            .onAppear {
+                                isDetailOpen = true
+                            }
+                            .onDisappear {
+                                isDetailOpen = false
+                            }
                     }
                 }
                 .padding(Dimens.spacing10)
@@ -68,6 +76,10 @@ struct SearchCitiesView: View {
         }
         .onRotate { newOrientation in
             orientation = newOrientation
+            if let city = viewModel.citySelected,
+               !isLandscape, !isDetailOpen {
+                navigationPath.append(.map(city))
+            }
         }
     }
 }
@@ -90,8 +102,9 @@ extension SearchCitiesView {
     private var landScapeView: some View {
         HStack(spacing: CitiesConstants.Dimens.spacing20) {
             searchComponent
-            MapView(coordinate: $viewModel.selectedCityCoordinate)
-                .accessibilityIdentifier("cityMapView")
+            MapView(currentLocation: $locationManager.currentLocation,
+                    coordinate: $viewModel.selectedCityCoordinate)
+            .accessibilityIdentifier("cityMapView")
         }
     }
 }

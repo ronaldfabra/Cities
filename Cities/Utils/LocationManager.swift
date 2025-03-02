@@ -10,7 +10,7 @@ import CoreLocation
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager: CLLocationManager
-    @Published var cityCoordinates: CLLocationCoordinate2D = .init()
+    @Published var currentLocation: CLLocationCoordinate2D?
 
     override init() {
         locationManager = CLLocationManager()
@@ -47,8 +47,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if error != nil {
                 return
             }
-            if let placemark = placemarks?.first, let cityCoordinates = placemark.location?.coordinate {
-                self.cityCoordinates = cityCoordinates
+            if let placemark = placemarks?.first, let currentLocation = placemark.location?.coordinate {
+                self.currentLocation = currentLocation
             }
         }
     }

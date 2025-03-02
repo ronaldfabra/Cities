@@ -23,8 +23,8 @@ class SearchCitiesViewModel: ObservableObject {
         }
     }
     @Published var error: NetworkErrorType = .none
-    @Published var selectedCityCoordinate: CLLocationCoordinate2D = .init()
-    private var citySelected: CityDomainModel?
+    @Published var selectedCityCoordinate: CLLocationCoordinate2D?
+    var citySelected: CityDomainModel?
     private var cancellables = Set<AnyCancellable>()
     private var querySubject = CurrentValueSubject<String, Never>(.empty)
 
@@ -100,7 +100,7 @@ class SearchCitiesViewModel: ObservableObject {
             filteredCities = showFavorites ? favorites : cities
         } else {
             filteredCities = (showFavorites ? favorites : cities).filter { city in
-                city.name.lowercased().hasPrefix(query.lowercased())
+                city.fullName.lowercased().hasPrefix(query.lowercased())
             }
         }
     }
@@ -169,11 +169,7 @@ extension SearchCitiesViewModel {
     }
 
     func cityIsSelected(city: CityDomainModel) -> Bool {
-        guard let citySelected else {
-            return selectedCityCoordinate.latitude == city.latitude &&
-            selectedCityCoordinate.longitude == city.longitude
-        }
-        return citySelected.id == city.id
+        return citySelected?.id == city.id
     }
 }
 

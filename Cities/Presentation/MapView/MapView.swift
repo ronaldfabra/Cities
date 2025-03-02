@@ -10,7 +10,8 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-    @Binding var coordinate: CLLocationCoordinate2D
+    @Binding var currentLocation: CLLocationCoordinate2D?
+    @Binding var coordinate: CLLocationCoordinate2D?
     @State private var orientation: UIDeviceOrientation = UIDevice.current.orientation
     @Environment(\.presentationMode) var presentationMode
     @State private var cameraPosition: MapCameraPosition
@@ -20,12 +21,16 @@ struct MapView: View {
         orientation.isLandscape || orientation == .portraitUpsideDown
     }
 
-    init(coordinate: Binding<CLLocationCoordinate2D>, applyRotationLogic: Bool = true) {
+    init(currentLocation: Binding<CLLocationCoordinate2D?> = .constant(nil),
+         coordinate: Binding<CLLocationCoordinate2D?>,
+         applyRotationLogic: Bool = true) {
+        self._currentLocation = currentLocation
         self._coordinate = coordinate
         self.applyRotationLogic = applyRotationLogic
+        let center: CLLocationCoordinate2D = coordinate.wrappedValue ?? currentLocation.wrappedValue ?? .init()
         cameraPosition = .region(
             MKCoordinateRegion(
-                center: coordinate.wrappedValue,
+                center: center,
                 span: MKCoordinateSpan(
                     latitudeDelta: 0.1,
                     longitudeDelta: 0.1
@@ -36,12 +41,17 @@ struct MapView: View {
 
     var body: some View {
         Map(position: $cameraPosition) {
-            Marker(String.empty, coordinate: coordinate)
+            if let coordinate {
+                Marker(String.empty, coordinate: coordinate)
+            }
         }
         .mapControls {
             MapUserLocationButton()
         }
         .onChange(of: coordinate) { _, newCoordinate in
+            updateCameraPosition(coordinate: newCoordinate)
+        }
+        .onChange(of: currentLocation) { _, newCoordinate in
             updateCameraPosition(coordinate: newCoordinate)
         }
         .onRotate { newOrientation in
@@ -65,13 +75,12 @@ struct MapView: View {
 }
 
 #Preview {
-    @Previewable @State var coordinate: CLLocationCoordinate2D = .init(
-        latitude: .zero,
-        longitude: .zero
-    )
+    @Previewable @State var currentLocation: CLLocationCoordinate2D?
+    @Previewable @State var coordinate: CLLocationCoordinate2D?
 
     VStack {
-        MapView(coordinate: $coordinate)
+        MapView(currentLocation: $currentLocation,
+                coordinate: $coordinate)
         Button {
             coordinate = .init(
                 latitude: 11.2303485,

@@ -23,7 +23,6 @@ public extension View {
     }
 
     func navigationBar(_ background: Color = .yellow) -> some View {
-        return self
-            .modifier(ColoredNavigationBar(background: background))
+        self.modifier(ColoredNavigationBar(background: background))
     }
 }
