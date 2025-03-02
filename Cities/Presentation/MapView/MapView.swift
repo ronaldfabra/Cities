@@ -14,13 +14,15 @@ struct MapView: View {
     @State private var orientation: UIDeviceOrientation = UIDevice.current.orientation
     @Environment(\.presentationMode) var presentationMode
     @State private var cameraPosition: MapCameraPosition
+    private var applyRotationLogic: Bool
 
     private var isLandscape: Bool {
         orientation.isLandscape || orientation == .portraitUpsideDown
     }
 
-    init(coordinate: Binding<CLLocationCoordinate2D>) {
+    init(coordinate: Binding<CLLocationCoordinate2D>, applyRotationLogic: Bool = true) {
         self._coordinate = coordinate
+        self.applyRotationLogic = applyRotationLogic
         cameraPosition = .region(
             MKCoordinateRegion(
                 center: coordinate.wrappedValue,
@@ -44,7 +46,7 @@ struct MapView: View {
         }
         .onRotate { newOrientation in
             orientation = newOrientation
-            if isLandscape {
+            if isLandscape, applyRotationLogic {
                 self.presentationMode.wrappedValue.dismiss()
             }
         }

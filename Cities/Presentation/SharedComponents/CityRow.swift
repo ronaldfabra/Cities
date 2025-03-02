@@ -15,6 +15,7 @@ struct CityRow: View {
     var isLandscape: Bool
     var isSelected: Bool
     var onItemTap: (() -> Void)?
+    var onInfoButtonTap: (() -> Void)?
     var onFavoriteButtonTap: (() -> Void)?
 
     private var applyLandscapeStyle: Bool {
@@ -27,6 +28,7 @@ struct CityRow: View {
         isLandscape: Bool,
         isSelected: Bool,
         onItemTap: (() -> Void)? = nil,
+        onInfoButtonTap: (() -> Void)? = nil,
         onFavoriteButtonTap: (() -> Void)? = nil
     ) {
         self.city = city
@@ -34,6 +36,7 @@ struct CityRow: View {
         self.isLandscape = isLandscape
         self.isSelected = isSelected
         self.onItemTap = onItemTap
+        self.onInfoButtonTap = onInfoButtonTap
         self.onFavoriteButtonTap = onFavoriteButtonTap
     }
 
@@ -44,6 +47,7 @@ struct CityRow: View {
             HStack {
                 cityInformation
                 Spacer()
+                informationButton
                 FavoriteButton(
                     isFavorite: isFavorite,
                     onButtonPressed: onFavoriteButtonTap
@@ -82,6 +86,19 @@ struct CityRow: View {
                 .foregroundStyle(applyLandscapeStyle ? Color.white : Color.gray)
             }
         }
+    }
+
+    private var informationButton: some View {
+        Button(action: {
+            onInfoButtonTap?()
+        }, label: {
+            Image(systemName: CitiesConstants.Icons.info)
+                .foregroundColor(Color.black)
+            .padding(CitiesConstants.Dimens.spacing10)
+            .animation(.bouncy, value: isFavorite)
+            .containerShape(.circle)
+        })
+        .accessibilityIdentifier("cityRowInformationButton_\(city.id)")
     }
 }
 

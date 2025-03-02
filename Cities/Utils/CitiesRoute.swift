@@ -8,4 +8,5 @@
 
 enum CitiesRoute: Hashable {
     case map(CityDomainModel)
+    case detail(CityDomainModel)
 }

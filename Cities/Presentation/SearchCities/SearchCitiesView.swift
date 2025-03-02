@@ -43,6 +43,9 @@ struct SearchCitiesView: View {
                             .navigationBarTitle(city.fullName, displayMode: .inline)
                             .navigationBar(CitiesConstants.CitiesColors.green)
                             .accessibilityIdentifier("cityMapView")
+                    case .detail(let city):
+                        CityDetailView(city: city)
+                            .accessibilityIdentifier("cityDetailView")
                     }
                 }
                 .padding(Dimens.spacing10)
@@ -138,6 +141,9 @@ extension SearchCitiesView {
                                         navigationPath.append(.map(city))
                                     }
                                 }
+                            },
+                            onInfoButtonTap: {
+                                navigationPath.append(.detail(city))
                             },
                             onFavoriteButtonTap: {
                                 viewModel.updateFavorite(city: city)

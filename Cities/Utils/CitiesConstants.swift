@@ -44,6 +44,7 @@ struct CitiesConstants {
         static let grid = "square.grid.2x2"
         static let downArrow = "chevron.down"
         static let clear = "xmark.circle.fill"
+        static let info = "info.circle"
     }
 
     struct Dimens {
