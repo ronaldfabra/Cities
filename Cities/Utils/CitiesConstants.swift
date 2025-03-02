@@ -6,6 +6,8 @@
 //
 
 
+import SwiftUI
+
 struct CitiesConstants {
     struct CitiesURL {
         static let baseURL = "https://gist.githubusercontent.com"
@@ -21,10 +23,12 @@ struct CitiesConstants {
         }
 
         static let favorites = "favorites"
-        static let searchCities = "Search Cities"
+        static let cities = "Cities"
+        static let searchCities = "Search your favorite city"
         static let tryAgain = "Try Again"
         static let coordinatesTitle = "coordinates:"
-        static let coordinatesValue = "latitude: %f, longitude: %f"
+        static let latitude = "latitude: %f"
+        static let longitude = "longitude: %f"
 
         struct EmptyState {
             struct Search {
@@ -60,5 +64,11 @@ struct CitiesConstants {
     struct LaunchArgument {
         static let responseError = "RESPONSE_ERROR"
         static let uiTests = "UI_TEST"
+    }
+
+    struct CitiesColors {
+        static let green = Color(red: 74 / 255,
+                                 green: 145 / 255,
+                                 blue: 154 / 255)
     }
 }

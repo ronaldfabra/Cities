@@ -7,7 +7,7 @@
 
 
 import Combine
-import Foundation
+import MapKit
 import SwiftUI
 
 class SearchCitiesViewModel: ObservableObject {
@@ -23,6 +23,8 @@ class SearchCitiesViewModel: ObservableObject {
         }
     }
     @Published var error: NetworkErrorType = .none
+    @Published var selectedCityCoordinate: CLLocationCoordinate2D = .init()
+    private var citySelected: CityDomainModel?
     private var cancellables = Set<AnyCancellable>()
     private var querySubject = CurrentValueSubject<String, Never>(.empty)
 
@@ -87,7 +89,7 @@ class SearchCitiesViewModel: ObservableObject {
 
     @MainActor
     private func processCitiesResponse(_ response: [CityDomainModel]) {
-        cities = response.sorted { $0.name < $1.name }
+        cities = response.sorted { ($0.name, $0.country) < ($1.name, $1.country) }
         filteredCities = cities
         showLoading(false)
     }
@@ -155,6 +157,23 @@ extension SearchCitiesViewModel {
             await resetData()
             getCities()
         }
+    }
+
+    @MainActor
+    func setCitySelected(city: CityDomainModel) {
+        self.citySelected = city
+        self.selectedCityCoordinate = .init(
+            latitude: city.latitude,
+            longitude: city.longitude
+        )
+    }
+
+    func cityIsSelected(city: CityDomainModel) -> Bool {
+        guard let citySelected else {
+            return selectedCityCoordinate.latitude == city.latitude &&
+            selectedCityCoordinate.longitude == city.longitude
+        }
+        return citySelected.id == city.id
     }
 }
 

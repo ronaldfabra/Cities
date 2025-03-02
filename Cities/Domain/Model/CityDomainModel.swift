@@ -13,6 +13,10 @@ struct CityDomainModel: Identifiable, Hashable, Equatable {
     let latitude: Double
     let longitude: Double
 
+    var fullName: String {
+        String(format: "%@, %@", name, country)
+    }
+
     static func == (lhs: CityDomainModel, rhs: CityDomainModel) -> Bool {
         lhs.id == rhs.id &&
         lhs.country == rhs.country &&

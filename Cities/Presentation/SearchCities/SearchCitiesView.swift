@@ -13,12 +13,12 @@ struct SearchCitiesView: View {
 
     typealias Dimens = CitiesConstants.Dimens
 
+    @State private var navigationPath: [CitiesRoute] = []
     @State private var orientation: UIDeviceOrientation = UIDevice.current.orientation
     @State private var query: String = .empty
     @StateObject private var viewModel: SearchCitiesViewModel
     @StateObject private var locationManager = LocationManager()
     @EnvironmentObject private var toastManager: ToastManager
-    @State private var selectedCityCoordinate: CLLocationCoordinate2D = .init()
 
     private var isLandscape: Bool {
         orientation.isLandscape || orientation == .portraitUpsideDown
@@ -31,20 +31,17 @@ struct SearchCitiesView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             contentView
-                .navigationBarTitle(CitiesConstants.Strings.searchCities,
+                .navigationBarTitle(CitiesConstants.Strings.cities,
                                     displayMode: .inline)
-                .navigationBar(.green.opacity(0.7))
-                .if(!isLandscape) { view in
-                    view.navigationDestination(for: CityDomainModel.self) { city in
-                        selectedCityCoordinate = .init(
-                            latitude: city.latitude,
-                            longitude: city.longitude
-                        )
-                        return MapView(coordinate: $selectedCityCoordinate)
-                            .navigationBarTitle(city.name, displayMode: .inline)
-                            .navigationBar(.green.opacity(0.7))
+                .navigationBar(CitiesConstants.CitiesColors.green)
+                .navigationDestination(for: CitiesRoute.self) { route in
+                    switch route {
+                    case .map(let city):
+                        MapView(coordinate: $viewModel.selectedCityCoordinate)
+                            .navigationBarTitle(city.fullName, displayMode: .inline)
+                            .navigationBar(CitiesConstants.CitiesColors.green)
                             .accessibilityIdentifier("cityMapView")
                     }
                 }
@@ -90,7 +87,7 @@ extension SearchCitiesView {
     private var landScapeView: some View {
         HStack(spacing: CitiesConstants.Dimens.spacing20) {
             searchComponent
-            MapView(coordinate: $selectedCityCoordinate)
+            MapView(coordinate: $viewModel.selectedCityCoordinate)
                 .accessibilityIdentifier("cityMapView")
         }
     }
@@ -133,11 +130,14 @@ extension SearchCitiesView {
                             city: city,
                             isFavorite: viewModel.isFavorite(cityId: city.id),
                             isLandscape: isLandscape,
+                            isSelected: viewModel.cityIsSelected(city: city),
                             onItemTap: {
-                                selectedCityCoordinate = .init(
-                                    latitude: city.latitude,
-                                    longitude: city.longitude
-                                )
+                                Task {
+                                    viewModel.setCitySelected(city: city)
+                                    if !isLandscape {
+                                        navigationPath.append(.map(city))
+                                    }
+                                }
                             },
                             onFavoriteButtonTap: {
                                 viewModel.updateFavorite(city: city)

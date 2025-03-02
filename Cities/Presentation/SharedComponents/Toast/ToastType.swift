@@ -16,7 +16,7 @@ enum ToastType {
     func getColor() -> Color {
         switch self {
         case .success:
-            return .green
+            return CitiesConstants.CitiesColors.green
         case .error:
             return .red
         case .warning:

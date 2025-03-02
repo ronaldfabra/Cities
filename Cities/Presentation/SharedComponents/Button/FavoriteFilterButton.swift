@@ -36,7 +36,7 @@ struct FavoriteFilterButton: View {
         .padding(CitiesConstants.Dimens.spacing8)
         .foregroundStyle(Color.black)
         .background(Capsule().stroke(Color.black, lineWidth: 1))
-        .background(isActive ? Color.green.opacity(0.7) : .white)
+        .background(isActive ? CitiesConstants.CitiesColors.green : .white)
         .clipShape(Capsule())
     }
 }
